@@ -1,0 +1,5 @@
+Flask
+sklearn
+nltk
+textstat
+newspaper3k

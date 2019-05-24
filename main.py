@@ -1,0 +1,181 @@
+from flask import Flask, render_template, request, url_for
+import pfnd_backend as backend
+
+app = Flask(__name__)
+
+@app.route('/')
+def index():
+  return render_template("front.html")
+
+#Initializing the about page
+@app.route('/about.html')
+def about():
+	return render_template("about.html")
+
+# Show the results
+@app.route('/resultsv2.html',methods = ['POST', 'GET'])
+def predict():
+  if request.method == 'POST':
+    if request.form['submit_button'] == 'both':
+      newstitle = request.form['newstitle']
+      newsbody = request.form['newsbody']
+      pred_and_prob = backend.process_news(newstitle,newsbody,'B')
+      feature_set  = 'both news headline and content features'
+    elif request.form['submit_button'] == 'head':
+      newstitle = request.form['newstitle']
+      pred_and_prob = backend.process_news(newstitle, '', 'H')
+      feature_set = 'news headline features only'
+    elif request.form['submit_button'] == 'cont':
+      newsbody = request.form['newsbody']
+      pred_and_prob = backend.process_news(newsbody, '', 'C')
+      feature_set = 'news content features only'
+    elif request.form['submit_button'] == 'url':
+      newsurl = request.form['newsurl']
+      pred_and_prob = backend.process_news(newsurl,'','U')
+      feature_set = 'the downloaded news from the URL given'
+
+  return render_template('resultsv2.html', newstitle=pred_and_prob['headline']
+                         , newsbody=pred_and_prob['content']
+                         , gnb_cred_proba=pred_and_prob['prediction_and_probability']['gnb_leg_prob']
+                         , gnb_notcred_proba=pred_and_prob['prediction_and_probability']['gnb_fake_prob']
+                         , lr_cred_proba=pred_and_prob['prediction_and_probability']['lr_leg_prob']
+                         , lr_notcred_proba=pred_and_prob['prediction_and_probability']['lr_fake_prob']
+                         , svm_cred_proba=pred_and_prob['prediction_and_probability']['svm_leg_prob']
+                         , svm_notcred_proba=pred_and_prob['prediction_and_probability']['svm_fake_prob']
+                         , head_word_count = pred_and_prob['computed_features']['head_word_count']
+                         , head_syllables_count=pred_and_prob['computed_features']['head_syllables_count']
+                         , head_sentence_count=pred_and_prob['computed_features']['head_sentence_count']
+                         , head_words_per_sentence=pred_and_prob['computed_features']['head_words_per_sentence']
+                         , head_long_word_count=pred_and_prob['computed_features']['head_long_word_count']
+                         , head_diff_word_count=pred_and_prob['computed_features']['head_diff_word_count']
+                         , head_TTR=pred_and_prob['computed_features']['head_TTR']
+                         , head_allcaps_word_count=pred_and_prob['computed_features']['head_allcaps_word_count']
+                         , head_func_word=pred_and_prob['computed_features']['head_func_word']
+                         , head_pronoun=pred_and_prob['computed_features']['head_pronoun']
+                         , head_pers_pronoun=pred_and_prob['computed_features']['head_pers_pronoun']
+                         , head_fps_pronoun=pred_and_prob['computed_features']['head_fps_pronoun']
+                         , head_fpp_pronoun=pred_and_prob['computed_features']['head_fpp_pronoun']
+                         , head_sec_pronoun=pred_and_prob['computed_features']['head_sec_pronoun']
+                         , head_tps_pronoun=pred_and_prob['computed_features']['head_tps_pronoun']
+                         , head_tpp_pronoun=pred_and_prob['computed_features']['head_tpp_pronoun']
+                         , head_impersonal_pronoun=pred_and_prob['computed_features']['head_impersonal_pronoun']
+                         , head_article=pred_and_prob['computed_features']['head_article']
+                         , head_prepositions=pred_and_prob['computed_features']['head_prepositions']
+                         , head_aux_verbs=pred_and_prob['computed_features']['head_aux_verbs']
+                         , head_common_adverbs=pred_and_prob['computed_features']['head_common_adverbs']
+                         , head_conjunctions=pred_and_prob['computed_features']['head_conjunctions']
+                         , head_negations=pred_and_prob['computed_features']['head_negations']
+                         , head_common_verbs=pred_and_prob['computed_features']['head_common_verbs']
+                         , head_common_adjectives=pred_and_prob['computed_features']['head_common_adjectives']
+                         , head_comparisons=pred_and_prob['computed_features']['head_comparisons']
+                         , head_interrogatives=pred_and_prob['computed_features']['head_interrogatives']
+                         , head_concrete_figures=pred_and_prob['computed_features']['head_concrete_figures']
+                         , head_quantifiers=pred_and_prob['computed_features']['head_quantifiers']
+                         , head_affect_process=pred_and_prob['computed_features']['head_affect_process']
+                         , head_pos_emotion=pred_and_prob['computed_features']['head_pos_emotion']
+                         , head_achievement=pred_and_prob['computed_features']['head_achievement']
+                         , head_neg_emotion=pred_and_prob['computed_features']['head_neg_emotion']
+                         , head_anxiety=pred_and_prob['computed_features']['head_anxiety']
+                         , head_anger=pred_and_prob['computed_features']['head_anger']
+                         , head_sadness=pred_and_prob['computed_features']['head_sadness']
+                         , head_cognitive_process=pred_and_prob['computed_features']['head_cognitive_process']
+                         , head_insight=pred_and_prob['computed_features']['head_insight']
+                         , head_causation=pred_and_prob['computed_features']['head_causation']
+                         , head_discrepancy=pred_and_prob['computed_features']['head_discrepancy']
+                         , head_tentative=pred_and_prob['computed_features']['head_tentative']
+                         , head_fillers=pred_and_prob['computed_features']['head_fillers']
+                         , head_certainty=pred_and_prob['computed_features']['head_certainty']
+                         , head_differentiation=pred_and_prob['computed_features']['head_differentiation']
+                         , head_informal_language=pred_and_prob['computed_features']['head_informal_language']
+                         , head_swear_words=pred_and_prob['computed_features']['head_swear_words']
+                         , head_internet_slang=pred_and_prob['computed_features']['head_internet_slang']
+                         , head_sexual_words=pred_and_prob['computed_features']['head_sexual_words']
+                         , head_nonfluencies=pred_and_prob['computed_features']['head_nonfluencies']
+                         , head_past_focus=pred_and_prob['computed_features']['head_past_focus']
+                         , head_present_focus=pred_and_prob['computed_features']['head_present_focus']
+                         , head_future_focus=pred_and_prob['computed_features']['head_future_focus']
+                         , head_punctuations=pred_and_prob['computed_features']['head_punctuations']
+                         , head_periods=pred_and_prob['computed_features']['head_periods']
+                         , head_commas=pred_and_prob['computed_features']['head_commas']
+                         , head_colons=pred_and_prob['computed_features']['head_colons']
+                         , head_semicolons=pred_and_prob['computed_features']['head_semicolons']
+                         , head_question_marks=pred_and_prob['computed_features']['head_question_marks']
+                         , head_exclam_marks=pred_and_prob['computed_features']['head_exclam_marks']
+                         , head_dashes=pred_and_prob['computed_features']['head_dashes']
+                         , head_apostrophes=pred_and_prob['computed_features']['head_apostrophes']
+                         , head_parentheses=pred_and_prob['computed_features']['head_parentheses']
+                         , head_other_puncts=pred_and_prob['computed_features']['head_other_puncts']
+                         , cont_fkg=pred_and_prob['computed_features']['cont_fkg']
+                         , cont_fre=pred_and_prob['computed_features']['cont_fre']
+                         , cont_cli=pred_and_prob['computed_features']['cont_cli']
+                         , cont_ari=pred_and_prob['computed_features']['cont_ari']
+                         , cont_dcrs=pred_and_prob['computed_features']['cont_dcrs']
+                         , cont_gfi=pred_and_prob['computed_features']['cont_gfi']
+                         , cont_smog=pred_and_prob['computed_features']['cont_smog']
+                         , cont_word_count=pred_and_prob['computed_features']['cont_word_count']
+                         , cont_syllables_count=pred_and_prob['computed_features']['cont_syllables_count']
+                         , cont_sentence_count=pred_and_prob['computed_features']['cont_sentence_count']
+                         , cont_words_per_sentence=pred_and_prob['computed_features']['cont_words_per_sentence']
+                         , cont_long_word_count=pred_and_prob['computed_features']['cont_long_word_count']
+                         , cont_diff_word_count=pred_and_prob['computed_features']['cont_diff_word_count']
+                         , cont_TTR=pred_and_prob['computed_features']['cont_TTR']
+                         , cont_allcaps_word_count=pred_and_prob['computed_features']['cont_allcaps_word_count']
+                         , cont_func_word=pred_and_prob['computed_features']['cont_func_word']
+                         , cont_pronoun=pred_and_prob['computed_features']['cont_pronoun']
+                         , cont_pers_pronoun=pred_and_prob['computed_features']['cont_pers_pronoun']
+                         , cont_fps_pronoun=pred_and_prob['computed_features']['cont_fps_pronoun']
+                         , cont_fpp_pronoun=pred_and_prob['computed_features']['cont_fpp_pronoun']
+                         , cont_sec_pronoun=pred_and_prob['computed_features']['cont_sec_pronoun']
+                         , cont_tps_pronoun=pred_and_prob['computed_features']['cont_tps_pronoun']
+                         , cont_tpp_pronoun=pred_and_prob['computed_features']['cont_tpp_pronoun']
+                         , cont_impersonal_pronoun=pred_and_prob['computed_features']['cont_impersonal_pronoun']
+                         , cont_article=pred_and_prob['computed_features']['cont_article']
+                         , cont_prepositions=pred_and_prob['computed_features']['cont_prepositions']
+                         , cont_aux_verbs=pred_and_prob['computed_features']['cont_aux_verbs']
+                         , cont_common_adverbs=pred_and_prob['computed_features']['cont_common_adverbs']
+                         , cont_conjunctions=pred_and_prob['computed_features']['cont_conjunctions']
+                         , cont_negations=pred_and_prob['computed_features']['cont_negations']
+                         , cont_common_verbs=pred_and_prob['computed_features']['cont_common_verbs']
+                         , cont_common_adjectives=pred_and_prob['computed_features']['cont_common_adjectives']
+                         , cont_comparisons=pred_and_prob['computed_features']['cont_comparisons']
+                         , cont_interrogatives=pred_and_prob['computed_features']['cont_interrogatives']
+                         , cont_concrete_figures=pred_and_prob['computed_features']['cont_concrete_figures']
+                         , cont_quantifiers=pred_and_prob['computed_features']['cont_quantifiers']
+                         , cont_affect_process=pred_and_prob['computed_features']['cont_affect_process']
+                         , cont_pos_emotion=pred_and_prob['computed_features']['cont_pos_emotion']
+                         , cont_achievement=pred_and_prob['computed_features']['cont_achievement']
+                         , cont_neg_emotion=pred_and_prob['computed_features']['cont_neg_emotion']
+                         , cont_anxiety=pred_and_prob['computed_features']['cont_anxiety']
+                         , cont_anger=pred_and_prob['computed_features']['cont_anger']
+                         , cont_sadness=pred_and_prob['computed_features']['cont_sadness']
+                         , cont_cognitive_process=pred_and_prob['computed_features']['cont_cognitive_process']
+                         , cont_insight=pred_and_prob['computed_features']['cont_insight']
+                         , cont_causation=pred_and_prob['computed_features']['cont_causation']
+                         , cont_discrepancy=pred_and_prob['computed_features']['cont_discrepancy']
+                         , cont_tentative=pred_and_prob['computed_features']['cont_tentative']
+                         , cont_fillers=pred_and_prob['computed_features']['cont_fillers']
+                         , cont_certainty=pred_and_prob['computed_features']['cont_certainty']
+                         , cont_differentiation=pred_and_prob['computed_features']['cont_differentiation']
+                         , cont_informal_language=pred_and_prob['computed_features']['cont_informal_language']
+                         , cont_swear_words=pred_and_prob['computed_features']['cont_swear_words']
+                         , cont_internet_slang=pred_and_prob['computed_features']['cont_internet_slang']
+                         , cont_sexual_words=pred_and_prob['computed_features']['cont_sexual_words']
+                         , cont_nonfluencies=pred_and_prob['computed_features']['cont_nonfluencies']
+                         , cont_past_focus=pred_and_prob['computed_features']['cont_past_focus']
+                         , cont_present_focus=pred_and_prob['computed_features']['cont_present_focus']
+                         , cont_future_focus=pred_and_prob['computed_features']['cont_future_focus']
+                         , cont_punctuations=pred_and_prob['computed_features']['cont_punctuations']
+                         , cont_periods=pred_and_prob['computed_features']['cont_periods']
+                         , cont_commas=pred_and_prob['computed_features']['cont_commas']
+                         , cont_colons=pred_and_prob['computed_features']['cont_colons']
+                         , cont_semicolons=pred_and_prob['computed_features']['cont_semicolons']
+                         , cont_question_marks=pred_and_prob['computed_features']['cont_question_marks']
+                         , cont_exclam_marks=pred_and_prob['computed_features']['cont_exclam_marks']
+                         , cont_dashes=pred_and_prob['computed_features']['cont_dashes']
+                         , cont_apostrophes=pred_and_prob['computed_features']['cont_apostrophes']
+                         , cont_parentheses=pred_and_prob['computed_features']['cont_parentheses']
+                         , cont_other_puncts=pred_and_prob['computed_features']['cont_other_puncts']
+                         , feature_set=feature_set)
+
+if __name__ == '__main__':
+  app.run()

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html ng-app="ui.bootstrap.demo">
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Prediction</title>
+
+    <!-- Bootstrap core CSS -->
+    <!--<link href="static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
+    <!-- Custom fonts for this template -->
+    <link href="static/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+    <link href="static/vendor/simple-line-icons/css/simple-line-icons.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
+
+    <!-- Bootstrap -->
+
+    <!-- Custom styles for this template -->
+    <link href="/static/landing-page.min.css" rel="stylesheet">
+
+</head>
+<body>
+<div class="container-fluid">
+<div class="row">
+	<div class="col-lg-9", ng-controller="ProgressDemoCtrl">
+        <div class="row dottedborder">
+            <div class = "col-lg-4"></div>
+            <div class = "col-lg-8">
+                <div class="center"><h3>{{ newstitle }}</h3></div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class = "col-lg-4"></div>
+            <div class = "col-lg-8">
+                <textarea class="form-control" rows="5" readonly>{{ newsbody }}</textarea>
+            </div>
+        </div>
+
+		</br>
+        <div class="row">
+            <div class = "col-lg-6"></div>
+            <div class = "col-lg-2"><b>Gaussian Naive Bayes</b></div>
+            <div class = "col-lg-2">
+                <div class="progress">
+                    <div id = "gnb_cred" class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                        {{ gnb_cred_proba }} % Credible
+                    </div>
+                    <div id = "gnb_notcred" class="progress-bar progress-bar-danger progress-bar-striped active" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                       {{ gnb_notcred_proba }} % Not Credible
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class = "col-lg-6"></div>
+            <div class = "col-lg-2"><b>Logistic Regression</b></div>
+            <div class = "col-lg-2">
+                <div class="progress">
+                    <div id = "lr_cred" class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                        {{ lr_cred_proba }} % Credible
+                    </div>
+                    <div id = "lr_notcred" class="progress-bar progress-bar-danger progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                        {{ lr_notcred_proba }} % Not Credible
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class = "col-lg-6"></div>
+            <div class = "col-lg-2"><b>Support Vector Machine</b></div>
+            <div class = "col-lg-2">
+                <div class="progress">
+                    <div id = "svm_cred" class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                        {{ svm_cred_proba }} % Credible
+                    </div>
+                    <div id = "svm_notcred" class="progress-bar progress-bar-danger progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                        {{ svm_notcred_proba }} % Not Credible
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class = "col-lg-6"></div>
+            <div class = "col-lg-1"></div>
+            <a href="./" class="btn btn-default" role="button"><b>Predict another news</b></a>
+        </div>
+    </div>
+
+    <script language="javascript">
+        var elem_gnb_cred = document.getElementById("gnb_cred");
+        elem_gnb_cred.style.width = {{ gnb_cred_proba }} + '%';
+
+        var elem_gnb_notcred = document.getElementById("gnb_notcred");
+        elem_gnb_notcred.style.width = {{ gnb_notcred_proba }} + '%';
+
+        var elem_lr_cred = document.getElementById("lr_cred");
+        elem_lr_cred.style.width = {{ lr_cred_proba }} + '%';
+
+        var elem_lr_notcred = document.getElementById("lr_notcred");
+        elem_lr_notcred.style.width = {{ lr_notcred_proba }} + '%';
+
+        var elem_svm_cred = document.getElementById("svm_cred");
+        elem_svm_cred.style.width = {{ svm_cred_proba }} + '%';
+
+        var elem_svm_notcred = document.getElementById("svm_notcred");
+        elem_svm_notcred.style.width = {{ svm_notcred_proba }} + '%';
+    </script>
+</div>
+</div>
+
+</body>
+</html>

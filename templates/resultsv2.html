@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html ng-app="ui.bootstrap.demo">
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Fake News Philippines - Analysis</title>
+    <link rel="shortcut icon" type="image/x-icon" href="static/punch.jpg" />
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
+
+    <!-- Custom fonts for this template -->
+    <link href="static/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+    <!--<link href="static/vendor/simple-line-icons/css/simple-line-icons.css" rel="stylesheet" type="text/css">-->
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
+
+    <!-- Bootstrap -->
+
+    <!-- Custom styles for this template -->
+    <link href="/static/landing-page.min.css" rel="stylesheet">
+
+    <style>
+        .box-1 {
+            position: relative;
+            overflow-y: scroll;
+            height: 350px; }
+
+        .box-2 {
+            position: relative;
+            overflow-y: scroll;
+            height: 500px; }
+
+        .square::-webkit-scrollbar-track {
+            border-radius: 0 !important; }
+
+        .square::-webkit-scrollbar-thumb {
+            border-radius: 0 !important; }
+
+        .thin::-webkit-scrollbar {
+            width: 6px; }
+
+        .scrollbar-sunny-morning::-webkit-scrollbar-track {
+            -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+            background-color: #F5F5F5;
+            border-radius: 10px; }
+
+        .scrollbar-sunny-morning::-webkit-scrollbar {
+            width: 12px;
+            background-color: #F5F5F5; }
+
+        .scrollbar-sunny-morning::-webkit-scrollbar-thumb {
+            border-radius: 10px;
+            -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+            background-image: -webkit-linear-gradient(330deg, #f6d365 0%, #fda085 100%);
+            background-image: linear-gradient(120deg, #f6d365 0%, #fda085 100%); }
+
+        .bordered-deep-purple::-webkit-scrollbar-track {
+            -webkit-box-shadow: none;
+            border: 1px solid #a87210; }
+
+        .bordered-deep-purple::-webkit-scrollbar-thumb {
+            -webkit-box-shadow: none; }
+
+        .thin::-webkit-scrollbar {
+            width: 6px; }
+
+        .card-body{-ms-flex:1 1 auto;flex:1 1 auto;padding:1.25rem}
+        .card{position:relative;display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;min-width:0;word-wrap:break-word;background-color:#fff;background-clip:border-box;border:1px solid rgba(0,0,0,.125);border-radius:.25rem}.card>hr{margin-right:0;margin-left:0}.card>.list-group:first-child .list-group-item:first-child{border-top-left-radius:.25rem;border-top-right-radius:.25rem}.card>.list-group:last-child .list-group-item:last-child{border-bottom-right-radius:.25rem;border-bottom-left-radius:.25rem}.card-body{-ms-flex:1 1 auto;flex:1 1 auto;padding:1.25rem}.card-title{margin-bottom:.75rem}.card-subtitle{margin-top:-.375rem;margin-bottom:0}.card-text:last-child{margin-bottom:0}
+        .card{-webkit-box-shadow:0 2px 5px 0 rgba(0,0,0,.16),0 2px 10px 0 rgba(0,0,0,.12);box-shadow:0 2px 5px 0 rgba(0,0,0,.16),0 2px 10px 0 rgba(0,0,0,.12);border:0;font-weight:400}.card[class*=border]{border:1px solid #9e9e9e;-webkit-box-shadow:none;box-shadow:none}.card .card-body h1,.card .card-body h2,.card .card-body h3,.card .card-body h4,.card .card-body h5,.card .card-body h6{font-weight:400}.card .card-body .card-title a{-webkit-transition:.2s ease-in-out;-o-transition:.2s ease-in-out;transition:.2s ease-in-out}.card .card-body .card-title a:hover{-webkit-transition:.2s ease-in-out;-o-transition:.2s ease-in-out;transition:.2s ease-in-out}.card .card-body .card-text{color:#747373;font-size:.9rem;font-weight:400}.card
+
+    </style>
+
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class = "col-lg-2"></div>
+        <div class="col-lg-8">
+            <h3 class="text-center"> Prediction using {{ feature_set }}</h3>
+        </div>
+    </div>
+<div class="row">
+	<div class="col-lg-7", ng-controller="ProgressDemoCtrl">
+        <div class="row">
+            <div class = "col-lg-3"></div>
+            <div class = "col-lg-9">
+                <div class="card box-1 scrollbar-sunny-morning bordered-deep-purple thin">
+                    <div class="card-body">
+                        <h4 id="section1"><strong>{{ newstitle }}</strong></h4>
+                        <p>{{ newsbody }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+		</br>
+        <div class="row">
+            <div class = "col-lg-5"></div>
+            <div class = "col-lg-3"><b>Gaussian Naive Bayes</b></div>
+            <div class = "col-lg-2">
+                <div class="progress">
+                    <div id = "gnb_cred" class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                        {{ gnb_cred_proba }} % Credible
+                    </div>
+                    <div id = "gnb_notcred" class="progress-bar progress-bar-danger progress-bar-striped active" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                       {{ gnb_notcred_proba }} % Not Credible
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class = "col-lg-5"></div>
+            <div class = "col-lg-3"><b>Logistic Regression</b></div>
+            <div class = "col-lg-2">
+                <div class="progress">
+                    <div id = "lr_cred" class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                        {{ lr_cred_proba }} % Credible
+                    </div>
+                    <div id = "lr_notcred" class="progress-bar progress-bar-danger progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                        {{ lr_notcred_proba }} % Not Credible
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class = "col-lg-5"></div>
+            <div class = "col-lg-3"><b>Support Vector Machines</b></div>
+            <div class = "col-lg-2">
+                <div class="progress">
+                    <div id = "svm_cred" class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                        {{ svm_cred_proba }} % Credible
+                    </div>
+                    <div id = "svm_notcred" class="progress-bar progress-bar-danger progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                        {{ svm_notcred_proba }} % Not Credible
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class = "col-lg-5"></div>
+            <div class = "col-lg-1"></div>
+            <a href="./" class="btn btn-default" role="button"><b>Predict another news</b></a>
+        </div>
+    </div>
+
+    <!-- Statistics -->
+    <div class="col-lg-4">
+        <div class="card box-2 square scrollbar-sunny-morning square thin">
+            <div class="card-body">
+                <table class="table table-borderless">
+                    <thead>
+                        <tr>
+                            <th>             </th>
+                            <th class="text-center">News Headline</th>
+                            <th class="text-center">News Content</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><b>Readability Scores</b></td>
+                            <td>                  </td>
+                            <td>                  </td>
+                        </tr>
+                        <tr>
+                            <td>Flesch Kincaid Grade</td>
+                            <td class="text-center">not applicable</td>
+                            <td class="text-center">{{ cont_fkg }}</td>
+                        </tr>
+                        <tr>
+                            <td>Flesch Reading Ease</td>
+                            <td class="text-center">not applicable</td>
+                            <td class="text-center">{{ cont_fre }}</td>
+                        </tr>
+                        <tr>
+                            <td>Coleman Liau Index</td>
+                            <td class="text-center">not applicable</td>
+                            <td class="text-center">{{ cont_cli }}</td>
+                        </tr>
+                        <tr>
+                            <td>Automated Readability Index</td>
+                            <td class="text-center">not applicable</td>
+                            <td class="text-center">{{ cont_ari }}</td>
+                        </tr>
+                        <tr>
+                            <td>Dale Chall Readability Score</td>
+                            <td class="text-center">not applicable</td>
+                            <td class="text-center">{{ cont_dcrs }}</td>
+                        </tr>
+                        <tr>
+                            <td>Gunning Fog Index</td>
+                            <td class="text-center">not applicable</td>
+                            <td class="text-center">{{ cont_gfi }}</td>
+                        </tr>
+                        <tr>
+                            <td>SMOG Grading</td>
+                            <td class="text-center">not applicable</td>
+                            <td class="text-center">{{ cont_smog }}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Linguistic Dimensions</b></td>
+                            <td>                  </td>
+                            <td>                  </td>
+                        </tr>
+                        <tr>
+                            <td>Word Count</td>
+                            <td class="text-center">{{ head_word_count }}</td>
+                            <td class="text-center">{{ cont_word_count }}</td>
+                        </tr>
+                        <tr>
+                            <td>Syllables Count</td>
+                            <td class="text-center">{{ head_syllables_count }}</td>
+                            <td class="text-center">{{ cont_syllables_count }}</td>
+                        </tr>
+                        <tr>
+                            <td>Sentences Count</td>
+                            <td class="text-center">{{ head_sentence_count }}</td>
+                            <td class="text-center">{{ cont_sentence_count }}</td>
+                        </tr>
+                        <tr>
+                            <td>Words Per Sentence</td>
+                            <td class="text-center">{{ head_words_per_sentence }}</td>
+                            <td class="text-center">{{ cont_words_per_sentence }}</td>
+                        </tr>
+                        <tr>
+                            <td>Long Words Count</td>
+                            <td class="text-center">{{ head_long_word_count }}</td>
+                            <td class="text-center">{{ cont_long_word_count }}</td>
+                        </tr>
+                        <tr>
+                            <td>Difficult Words Count</td>
+                            <td class="text-center">{{ head_diff_word_count }}</td>
+                            <td class="text-center">{{ cont_diff_word_count }}</td>
+                        </tr>
+                        <tr>
+                            <td>Type Token Ratio</td>
+                            <td class="text-center">{{ head_TTR }}</td>
+                            <td class="text-center">{{ cont_TTR }}</td>
+                        </tr>
+                        <tr>
+                            <td>No. of Words in All Caps</td>
+                            <td class="text-center">{{ head_allcaps_word_count }}</td>
+                            <td class="text-center">{{ cont_allcaps_word_count }}</td>
+                        </tr>
+                        <tr>
+                            <td>Function Words</td>
+                            <td class="text-center">{{ head_func_word }}</td>
+                            <td class="text-center">{{ cont_func_word }}</td>
+                        </tr>
+                        <tr>
+                            <td>Pronouns</td>
+                            <td class="text-center">{{ head_pronoun }}</td>
+                            <td class="text-center">{{ cont_pronoun }}</td>
+                        </tr>
+                        <tr>
+                            <td>Personal Pronouns</td>
+                            <td class="text-center">{{ head_pers_pronoun }}</td>
+                            <td class="text-center">{{ cont_pers_pronoun }}</td>
+                        </tr>
+                        <tr>
+                            <td>First-Person Singular</td>
+                            <td class="text-center">{{ head_fps_pronoun }}</td>
+                            <td class="text-center">{{ cont_fps_pronoun }}</td>
+                        </tr>
+                        <tr>
+                            <td>First-Person Plural</td>
+                            <td class="text-center">{{ head_fpp_pronoun }}</td>
+                            <td class="text-center">{{ cont_fpp_pronoun }}</td>
+                        </tr>
+                        <tr>
+                            <td>Second Person</td>
+                            <td class="text-center">{{ head_sec_pronoun }}</td>
+                            <td class="text-center">{{ cont_sec_pronoun }}</td>
+                        </tr>
+                        <tr>
+                            <td>Third-Person Singular</td>
+                            <td class="text-center">{{ head_tps_pronoun }}</td>
+                            <td class="text-center">{{ cont_tps_pronoun }}</td>
+                        </tr>
+                        <tr>
+                            <td>Third-Person Plural </td>
+                            <td class="text-center">{{ head_tpp_pronoun }}</td>
+                            <td class="text-center">{{ cont_tpp_pronoun }}</td>
+                        </tr>
+                        <tr>
+                            <td>Impersonal Pronouns</td>
+                            <td class="text-center">{{ head_impersonal_pronoun }}</td>
+                            <td class="text-center">{{ cont_impersonal_pronoun }}</td>
+                        </tr>
+                        <tr>
+                            <td>Articles</td>
+                            <td class="text-center">{{ head_article }}</td>
+                            <td class="text-center">{{ cont_article }}</td>
+                        </tr>
+                        <tr>
+                            <td>Prepositions</td>
+                            <td class="text-center">{{ head_prepositions }}</td>
+                            <td class="text-center">{{ cont_prepositions }}</td>
+                        </tr>
+                        <tr>
+                            <td>Auxiliary Verbs</td>
+                            <td class="text-center">{{ head_aux_verbs }}</td>
+                            <td class="text-center">{{ cont_aux_verbs }}</td>
+                        </tr>
+                        <tr>
+                            <td>Common Adverbs</td>
+                            <td class="text-center">{{ head_common_adverbs }}</td>
+                            <td class="text-center">{{ cont_common_adverbs }}</td>
+                        </tr>
+                        <tr>
+                            <td>Conjunctions</td>
+                            <td class="text-center">{{ head_conjunctions }}</td>
+                            <td class="text-center">{{ cont_conjunctions }}</td>
+                        </tr>
+                        <tr>
+                            <td>Negations </td>
+                            <td class="text-center">{{ head_negations }}</td>
+                            <td class="text-center">{{ cont_negations }}</td>
+                        </tr>
+                        <tr>
+                            <td>Common Verbs</td>
+                            <td class="text-center">{{ head_common_verbs }}</td>
+                            <td class="text-center">{{ cont_common_verbs }}</td>
+                        </tr>
+                        <tr>
+                            <td>Common Adjectives</td>
+                            <td class="text-center">{{ head_common_adjectives }}</td>
+                            <td class="text-center">{{ cont_common_adjectives }}</td>
+                        </tr>
+                        <tr>
+                            <td>Comparisons</td>
+                            <td class="text-center">{{ head_comparisons }}</td>
+                            <td class="text-center">{{ cont_comparisons }}</td>
+                        </tr>
+                        <tr>
+                            <td>Interrogatives</td>
+                            <td class="text-center">{{ head_interrogatives }}</td>
+                            <td class="text-center">{{ cont_interrogatives }}</td>
+                        </tr>
+                        <tr>
+                            <td>Concrete Figures</td>
+                            <td class="text-center">{{ head_concrete_figures }}</td>
+                            <td class="text-center">{{ cont_concrete_figures }}</td>
+                        </tr>
+                        <tr>
+                            <td>Quantifiers</td>
+                            <td class="text-center">{{ head_quantifiers }}</td>
+                            <td class="text-center">{{ cont_quantifiers }}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Affective Cues</b></td>
+                            <td>                  </td>
+                            <td>                  </td>
+                        </tr>
+                        <tr>
+                            <td>Affective Processes</td>
+                            <td class="text-center">{{ head_affect_process }}</td>
+                            <td class="text-center">{{ cont_affect_process }}</td>
+                        </tr>
+                        <tr>
+                            <td>Positive Emotion</td>
+                            <td class="text-center">{{ head_pos_emotion }}</td>
+                            <td class="text-center">{{ cont_pos_emotion }}</td>
+                        </tr>
+                        <tr>
+                            <td>Achievement</td>
+                            <td class="text-center">{{ head_achievement }}</td>
+                            <td class="text-center">{{ cont_achievement }}</td>
+                        </tr>
+                        <tr>
+                            <td>Negative Emotion</td>
+                            <td class="text-center">{{ head_neg_emotion }}</td>
+                            <td class="text-center">{{ cont_neg_emotion }}</td>
+                        </tr>
+                        <tr>
+                            <td>Anxiety</td>
+                            <td class="text-center">{{ head_anxiety }}</td>
+                            <td class="text-center">{{ cont_anxiety }}</td>
+                        </tr>
+                        <tr>
+                            <td>Anger</td>
+                            <td class="text-center">{{ head_anger }}</td>
+                            <td class="text-center">{{ cont_anger }}</td>
+                        </tr>
+                        <tr>
+                            <td>Sadness</td>
+                            <td class="text-center">{{ head_sadness }}</td>
+                            <td class="text-center">{{ cont_sadness }}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Cognitive Cues</b></td>
+                            <td>                     </td>
+                            <td>                     </td>
+                        </tr>
+                        <tr>
+                            <td>Cognitive Processes</td>
+                            <td class="text-center">{{ head_cognitive_process }}</td>
+                            <td class="text-center">{{ cont_cognitive_process }}</td>
+                        </tr>
+                        <tr>
+                            <td>Insight</td>
+                            <td class="text-center">{{ head_insight }}</td>
+                            <td class="text-center">{{ cont_insight }}</td>
+                        </tr>
+                        <tr>
+                            <td>Causation</td>
+                            <td class="text-center">{{ head_causation }}</td>
+                            <td class="text-center">{{ cont_causation }}</td>
+                        </tr>
+                        <tr>
+                            <td>Discrepancy</td>
+                            <td class="text-center">{{ head_discrepancy }}</td>
+                            <td class="text-center">{{ cont_discrepancy }}</td>
+                        </tr>
+                        <tr>
+                            <td>Tentative</td>
+                            <td class="text-center">{{ head_tentative }}</td>
+                            <td class="text-center">{{ cont_tentative }}</td>
+                        </tr>
+                        <tr>
+                            <td>Fillers</td>
+                            <td class="text-center">{{ head_fillers }}</td>
+                            <td class="text-center">{{ cont_fillers }}</td>
+                        </tr>
+                        <tr>
+                            <td>Certainty</td>
+                            <td class="text-center">{{ head_certainty }}</td>
+                            <td class="text-center">{{ cont_certainty }}</td>
+                        </tr>
+                        <tr>
+                            <td>Differentiation</td>
+                            <td class="text-center">{{ head_differentiation }}</td>
+                            <td class="text-center">{{ cont_differentiation }}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Informality Cues</b></td>
+                            <td>                     </td>
+                            <td>                     </td>
+                        </tr>
+                        <tr>
+                            <td>Informal Language</td>
+                            <td class="text-center">{{ head_informal_language }}</td>
+                            <td class="text-center">{{ cont_informal_language }}</td>
+                        </tr>
+                        <tr>
+                            <td>Swear Words</td>
+                            <td class="text-center">{{ head_swear_words }}</td>
+                            <td class="text-center">{{ cont_swear_words }}</td>
+                        </tr>
+                        <tr>
+                            <td>Internet Slang</td>
+                            <td class="text-center">{{ head_internet_slang }}</td>
+                            <td class="text-center">{{ cont_internet_slang }}</td>
+                        </tr>
+                        <tr>
+                            <td>Sexual Words</td>
+                            <td class="text-center">{{ head_sexual_words }}</td>
+                            <td class="text-center">{{ cont_sexual_words }}</td>
+                        </tr>
+                        <tr>
+                            <td>Non-fluencies</td>
+                            <td class="text-center">{{ head_nonfluencies }}</td>
+                            <td class="text-center">{{ cont_nonfluencies }}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Time-Orientation Cues</b></td>
+                            <td>                     </td>
+                            <td>                     </td>
+                        </tr>
+                        <tr>
+                            <td>Past Focus</td>
+                            <td class="text-center">{{ head_past_focus }}</td>
+                            <td class="text-center">{{ cont_past_focus }}</td>
+                        </tr>
+                        <tr>
+                            <td>Present Focus</td>
+                            <td class="text-center">{{ head_present_focus }}</td>
+                            <td class="text-center">{{ cont_present_focus }}</td>
+                        </tr>
+                        <tr>
+                            <td>Future Focus</td>
+                            <td class="text-center">{{ head_future_focus }}</td>
+                            <td class="text-center">{{ cont_future_focus }}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Punctuation Cues</b></td>
+                            <td>                     </td>
+                            <td>                     </td>
+                        </tr>
+                        <tr>
+                            <td>Punctuations</td>
+                            <td class="text-center">{{ head_punctuations }}</td>
+                            <td class="text-center">{{ cont_punctuations }}</td>
+                        </tr>
+                        <tr>
+                            <td>Periods</td>
+                            <td class="text-center">{{ head_periods }}</td>
+                            <td class="text-center">{{ cont_periods }}</td>
+                        </tr>
+                        <tr>
+                            <td>Commas</td>
+                            <td class="text-center">{{ head_commas }}</td>
+                            <td class="text-center">{{ cont_commas }}</td>
+                        </tr>
+                        <tr>
+                            <td>Colons</td>
+                            <td class="text-center">{{ head_colons }}</td>
+                            <td class="text-center">{{ cont_colons }}</td>
+                        </tr>
+                        <tr>
+                            <td>Semicolons</td>
+                            <td class="text-center">{{ head_semicolons }}</td>
+                            <td class="text-center">{{ cont_semicolons }}</td>
+                        </tr>
+                        <tr>
+                            <td>Question Marks</td>
+                            <td class="text-center">{{ head_question_marks }}</td>
+                            <td class="text-center">{{ cont_question_marks }}</td>
+                        </tr>
+                        <tr>
+                            <td>Exclamation Marks</td>
+                            <td class="text-center">{{ head_exclam_marks }}</td>
+                            <td class="text-center">{{ cont_exclam_marks }}</td>
+                        </tr>
+                        <tr>
+                            <td>Dashes</td>
+                            <td class="text-center">{{ head_dashes }}</td>
+                            <td class="text-center">{{ cont_dashes }}</td>
+                        </tr>
+                        <tr>
+                            <td>Apostrophes</td>
+                            <td class="text-center">{{ head_apostrophes }}</td>
+                            <td class="text-center">{{ cont_apostrophes }}</td>
+                        </tr>
+                        <tr>
+                            <td>Parentheses</td>
+                            <td class="text-center">{{ head_parentheses }}</td>
+                            <td class="text-center">{{ cont_parentheses }}</td>
+                        </tr>
+                        <tr>
+                            <td>Other Punctuations</td>
+                            <td class="text-center">{{ head_other_puncts }}</td>
+                            <td class="text-center">{{ cont_other_puncts }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <p><small><em>*** Readability scores were not computed from the news headlines since these are formulated to assess long texts.</em></small></p>
+    </div>
+
+    </div>
+    <div class="col-lg-1"></div>
+
+    <script language="javascript">
+        var elem_gnb_cred = document.getElementById("gnb_cred");
+        elem_gnb_cred.style.width = {{ gnb_cred_proba }} + '%';
+
+        var elem_gnb_notcred = document.getElementById("gnb_notcred");
+        elem_gnb_notcred.style.width = {{ gnb_notcred_proba }} + '%';
+
+        var elem_lr_cred = document.getElementById("lr_cred");
+        elem_lr_cred.style.width = {{ lr_cred_proba }} + '%';
+
+        var elem_lr_notcred = document.getElementById("lr_notcred");
+        elem_lr_notcred.style.width = {{ lr_notcred_proba }} + '%';
+
+        var elem_svm_cred = document.getElementById("svm_cred");
+        elem_svm_cred.style.width = {{ svm_cred_proba }} + '%';
+
+        var elem_svm_notcred = document.getElementById("svm_notcred");
+        elem_svm_notcred.style.width = {{ svm_notcred_proba }} + '%';
+    </script>
+</div>
+</div>
+
+</body>
+</html>

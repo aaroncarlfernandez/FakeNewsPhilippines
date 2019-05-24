@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="ui.bootstrap.demo">
+<head>
+  <title>Fake News Philippines</title>
+  <link rel="shortcut icon" type="image/x-icon" href="static/punch.jpg" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+  <style>
+      .mainheader {
+          position: absolute;
+          height: 10px;
+      }
+      .cont2 {
+          position: absolute;
+          top:20px;
+          left:20px;
+          right:20px;
+          bottom: 20px;
+          width:1500px;
+          height:650px;
+          margin:auto;
+          background-image:url(static/mochacropped2.jpg);
+          background-size: cover;
+          background-repeat: no-repeat;
+      }
+
+      .maintext {
+          text-align: center;
+          color: white;
+      }
+
+      .buttonwrapper {
+          text-align: center;
+      }
+
+      .footer2 {
+          position: fixed;
+          left: 35px;
+          bottom: 10px;
+          width: 100%;
+          background-color: white;
+          color: grey;
+          tex-align: left;
+      }
+
+  </style>
+
+</head>
+<body>
+<div class="mainheader"><div class="row"></div></div>
+<div class="cont2">
+    </br></br></br></br></br></br></br></br></br></br></br></br>
+    <h2 class="maintext">Computing the Linguistic-Based Cues of Fake News</h2>
+    <h2 class="maintext">in the Philippines Towards its Detection</h2></br>
+
+    <div class="buttonwrapper">
+        <!-- Prediction using URL -->
+        <button type="button" class="btn btn-info btn-lg" id="btnURL">URL</button>
+        <div class="modal fade" id="buttonURL" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form action="resultsv2.html" method="POST">
+                        <div class="form-row">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">This will download the news headline and content from the URL and predict using the downloaded data</h4>
+                            </div>
+                            <div class="modal-body" name="newsbody">
+                                <input type="text" class="form-control form-control-lg" placeholder="https://example.com" name="newsurl" required pattern="https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)" size="100">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary" name="submit_button" value="url" id="predURL">Predict</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Prediction using both news headline and content -->
+        <button type="button" class="btn btn-info btn-lg" id="btnBoth">Both News Headline and Content</button>
+        <div class="modal fade" id="buttonBoth" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form action="resultsv2.html" method="POST">
+                        <div class="form-row">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">Prediction using both news headline and content</h4></br>
+                                <input type="text" class="form-control form-control-lg" placeholder="Enter the news headline here.." name="newstitle" required minlength="5">
+                            </div>
+                            <div class="modal-body">
+                                <textarea class="form-control form-control-lg" placeholder="Enter the news content here.." name="newsbody" rows="5" required minlength="30"></textarea>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary" name="submit_button" value="both">Predict</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Prediction using news headline only -->
+        <button type="button" class="btn btn-info btn-lg" id="btnHead">News Headline Only</button>
+        <div class="modal fade" id="buttonHead" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form action="resultsv2.html" method="POST">
+                        <div class="form-row">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">Prediction using the news headline only</h4>
+                            </div>
+                            <div class="modal-body">
+                                <input type="text" class="form-control form-control-lg" placeholder="Enter the news headline here.." name="newstitle" required minlength="5">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary" name="submit_button" value="head">Predict</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Prediction using news content only -->
+        <button type="button" class="btn btn-info btn-lg" id="btnCont">News Content Only</button>
+        <div class="modal fade" id="buttonCont" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form action="resultsv2.html" method="POST">
+                        <div class="form-row">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">Prediction using the news content only</h4>
+                            </div>
+                            <div class="modal-body">
+                                <textarea class="form-control form-control-lg" placeholder="Enter the news content here.." name="newsbody" rows="5" required minlength="30"></textarea>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary" name="submit_button" value="cont">Predict</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<div class="footer2">
+    <div class="col-lg-11">
+        <p class="text-muted small mb-4 mb-lg-0">Created by Aaron Carl Fernandez.</p>
+    </div>
+    <div class="col-lg-1">
+        <a class="text" id="btnAbout" data-toggle="modal">About</a>
+    </div>
+</div>
+
+<script>
+$(document).ready(function(){
+  $("#btnURL").click(function(){
+    $("#buttonURL").modal();
+  });
+});
+
+$(document).ready(function(){
+  $("#predURL").click(function(){
+    $("#resultURL").modal();
+  });
+});
+
+$(document).ready(function(){
+  $("#btnBoth").click(function(){
+    $("#buttonBoth").modal();
+  });
+});
+
+$(document).ready(function(){
+  $("#btnHead").click(function(){
+    $("#buttonHead").modal();
+  });
+});
+
+$(document).ready(function(){
+  $("#btnCont").click(function(){
+    $("#buttonCont").modal();
+  });
+});
+
+$(document).ready(function(){
+  $("#btnAbout").click(function(){
+    $("#buttonAbout").modal();
+  });
+});
+        var elem_gnb_cred = document.getElementById("gnb_cred");
+        elem_gnb_cred.style.width = {{ gnb_cred_proba }} + '%';
+
+        var elem_gnb_notcred = document.getElementById("gnb_notcred");
+        elem_gnb_notcred.style.width = {{ gnb_notcred_proba }} + '%';
+
+        var elem_lr_cred = document.getElementById("lr_cred");
+        elem_lr_cred.style.width = {{ lr_cred_proba }} + '%';
+
+        var elem_lr_notcred = document.getElementById("lr_notcred");
+        elem_lr_notcred.style.width = {{ lr_notcred_proba }} + '%';
+
+        var elem_svm_cred = document.getElementById("svm_cred");
+        elem_svm_cred.style.width = {{ svm_cred_proba }} + '%';
+
+        var elem_svm_notcred = document.getElementById("svm_notcred");
+        elem_svm_notcred.style.width = {{ svm_notcred_proba }} + '%';
+
+</script>
+
+<!-- Modal for the "About" dialog is placed here to avoid Parent-Inheritance issues -->
+<div class="modal fade" id="buttonAbout" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"><strong>About this project</strong></h4>
+            </div>
+            <div class="modal-body">
+                <p>This project is a quick prototype of the paper <i>"Computing the Linguistic-Based Cues of Fake News in the Philippines Towards its Detection".</i>
+                    The models were trained using the <b>Philippine Fake News Corpus</b>, which contains <b>14,802</b> Credible news samples and <b>7,656</b> Not Credible news samples.
+                    The dataset is not exhaustive, but is well-grounded. This project just aims to demonstrate how effective frequency and/or dictionary-based heuristics are as machine learning features. </br></br>
+                    The performances of the models were as follows:</br></br>
+                    <img src="static/performance_table.jpg" class="img-rounded" alt="Cinque Terre">
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
